@@ -38,4 +38,12 @@ class Homeprovider extends ChangeNotifier
     "assets/logo/amz.png",
   ];
 
+  int index = 0;
+  void changeIndex()
+  {
+    Random randomNum = Random();
+    index = randomNum.nextInt(5);
+    notifyListeners();
+  }
+
 }

@@ -22,6 +22,7 @@ class _HomescreenState extends State<Homescreen> {
     homeproviderTrue = Provider.of(context, listen: true);
 
 
+
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -33,9 +34,8 @@ class _HomescreenState extends State<Homescreen> {
                 return Text("${snapshot.error}");
               } else if (snapshot.hasData) {
 
-                Random randomNum = Random();
-                int index = randomNum.nextInt(5);
-                print("${index}=======================================================");
+
+                print("${homeproviderTrue!.index}=======================================================");
                 RandomPerson? randomPerson = snapshot.data;
                 List<Result>? resultList = randomPerson!.results;
                 return Column(
@@ -78,7 +78,7 @@ class _HomescreenState extends State<Homescreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Container(height: 40,child: Image.asset("${homeproviderTrue!.companyImg[index]}",),),
+                          Container(height: 40,child: Image.asset("${homeproviderTrue!.companyImg[homeproviderTrue!.index]}",),alignment: Alignment.center),
                           SizedBox(height: 10,),
                           Container(
                             margin: EdgeInsetsDirectional.all(10),
@@ -93,13 +93,14 @@ class _HomescreenState extends State<Homescreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadiusDirectional.circular(100),
-                              child: Image.asset(
-                                //"${resultList![0].picture!.large}",
-                                resultList![0].gender == "female"
-                                    ? "${homeproviderTrue!.femaleImg[index]}"
-                                    : "${homeproviderTrue!.maleImg[index]}",
-                                fit: BoxFit.cover,
-                              ),
+                              child: Image.network("${resultList![0].picture!.large}",fit: BoxFit.cover),
+                              // child: Image.asset(
+                              //   //"${resultList![0].picture!.large}",
+                              //   resultList![0].gender == "female"
+                              //       ? "${homeproviderTrue!.femaleImg[homeproviderTrue!.index]}"
+                              //       : "${homeproviderTrue!.maleImg[homeproviderTrue!.index]}",
+                              //   fit: BoxFit.cover,
+                              // ),
                             ),
                           ),
                           SizedBox(
@@ -113,27 +114,15 @@ class _HomescreenState extends State<Homescreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "(Age : ",
-                                style: TextStyle(
-                                  color: Colors.blueGrey.shade700,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                "${resultList[0].dob!.age})",
-                                style: TextStyle(
-                                  color: Colors.blueGrey.shade700,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "From ${resultList[0].location!.country}",
+                            style: TextStyle(
+                              color: Colors.blueGrey.shade700,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -163,43 +152,46 @@ class _HomescreenState extends State<Homescreen> {
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.blueGrey.shade700,
-                                    size: 16,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${resultList[0].location!.street!.number}, ${resultList[0].location!.street!.name}, ${resultList[0].location!.city}",
-                                        style: TextStyle(
-                                          color: Colors.blueGrey.shade700,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      color: Colors.blueGrey.shade700,
+                                      size: 16,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${resultList[0].location!.street!.number}, ${resultList[0].location!.street!.name}, ${resultList[0].location!.city}",
+                                          style: TextStyle(
+                                            color: Colors.blueGrey.shade700,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      ),
-                                      Text(
-                                        "${resultList[0].location!.state}, ${resultList[0].location!.country} , - ${resultList[0].location!.postcode}",
-                                        style: TextStyle(
-                                          color: Colors.blueGrey.shade700,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                                        SizedBox(
+                                          height: 2,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        Text(
+                                          "${resultList[0].location!.state}, ${resultList[0].location!.country} , - ${resultList[0].location!.postcode}",
+                                          style: TextStyle(
+                                            color: Colors.blueGrey.shade700,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 10,),
                               Row(
@@ -271,15 +263,12 @@ class _HomescreenState extends State<Homescreen> {
                     ),
                     SizedBox(height: 30,),
                     InkWell(onTap: () {
-                      setState(() {
-
-                        
-                      });
+                      homeproviderFalse!.changeIndex();
                     },child: Icon(Icons.next_week_rounded,color: Colors.blueGrey.shade700,size: 50)),
                   ],
                 );
               }
-              return CircularProgressIndicator();
+              return CircularProgressIndicator(color: Colors.blueGrey.shade700,);
             },
           ),
         ),
